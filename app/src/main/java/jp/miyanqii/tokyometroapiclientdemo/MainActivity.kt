@@ -2,6 +2,7 @@ package jp.miyanqii.tokyometroapiclientdemo
 
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.design.widget.TabLayout
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -9,13 +10,15 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import jp.miyanqii.tokyometroapiclientdemo.api.TokyoMetroApi
+import jp.miyanqii.tokyometroapiclientdemo.api.data.Railway
 import jp.miyanqii.tokyometroapiclientdemo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private var stationApiDisposable: Disposable? = null
     private var railwayApiDisposable: Disposable? = null
-    private var trainApiDisposable: Disposable? = null
+
+//    private var stationApiDisposable: Disposable? = null
+//    private var trainApiDisposable: Disposable? = null
 
     private lateinit var b: ActivityMainBinding
 
@@ -23,12 +26,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         b = DataBindingUtil.setContentView(this, R.layout.activity_main)
         setSupportActionBar(b.toolbar)
-        setUpViewPager()
     }
 
-    private fun setUpViewPager() {
-        b.viewPager.setAdapter(MainActivityPagerAdapter(supportFragmentManager))
-        b.tabLayout.setupWithViewPager(b.viewPager)
+    private fun setUpViewPager(railways: List<Railway>) {
+        b.viewPager.adapter = MainActivityPagerAdapter(supportFragmentManager, railways)
+        b.tabLayout.apply {
+            tabMode = TabLayout.MODE_SCROLLABLE
+            setupWithViewPager(b.viewPager)
+        }
     }
 
 
@@ -53,26 +58,26 @@ class MainActivity : AppCompatActivity() {
                 .subscribeOn(Schedulers.newThread())
                 .doOnSubscribe { }
                 .subscribe { railways ->
-
+                    setUpViewPager(railways)
                 }
 
-        stationApiDisposable = TokyoMetroApi()
-                .fetchStations()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.newThread())
-                .doOnSubscribe { }
-                .subscribe { stations ->
-
-                }
-
-        trainApiDisposable = TokyoMetroApi()
-                .fetchTrains()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.newThread())
-                .doOnSubscribe { }
-                .subscribe { trains ->
-
-                }
+//        stationApiDisposable = TokyoMetroApi()
+//                .fetchStations()
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeOn(Schedulers.newThread())
+//                .doOnSubscribe { }
+//                .subscribe { stations ->
+//
+//                }
+//
+//        trainApiDisposable = TokyoMetroApi()
+//                .fetchTrains()
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribeOn(Schedulers.newThread())
+//                .doOnSubscribe { }
+//                .subscribe { trains ->
+//
+//                }
 
     }
 
@@ -86,6 +91,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        stationApiDisposable?.dispose()
+        railwayApiDisposable?.dispose()
     }
 }

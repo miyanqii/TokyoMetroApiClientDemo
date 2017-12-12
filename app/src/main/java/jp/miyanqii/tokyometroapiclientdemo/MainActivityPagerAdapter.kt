@@ -3,26 +3,19 @@ package jp.miyanqii.tokyometroapiclientdemo
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import jp.miyanqii.tokyometroapiclientdemo.api.data.Railway
 
-/**
- * Created by shuheimiyaki on 2017/12/05.
- */
-class MainActivityPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class MainActivityPagerAdapter(fm: FragmentManager, val railways: List<Railway>) : FragmentPagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
-        return PlaceholderFragment.newInstance(position + 1)
+        return RailwayFragment.newInstance(railways.get(position))
     }
 
     override fun getCount(): Int {
-        return 3
+        return railways.size
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        when (position) {
-            0 -> return "SECTION 1"
-            1 -> return "SECTION 2"
-            2 -> return "SECTION 3"
-            else -> return null
-        }
+        return railways.get(position).dcTitle
     }
 }
