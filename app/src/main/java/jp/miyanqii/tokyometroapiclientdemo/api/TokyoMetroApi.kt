@@ -18,7 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class TokyoMetroApi {
 
     companion object {
-        private val CONSUMER_KEY = "a233c093b356f1f91cafea96d99b86352024ec77dd84690e49f9d2ca0ba9f19b"//TODO enter Consumer Key
+        private val CONSUMER_KEY = ""//TODO enter Consumer Key
     }
 
     private fun prepareRetrofit(): Retrofit {
